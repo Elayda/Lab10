@@ -30,8 +30,8 @@ public class EmployeeDatabase {
     /**
      * Returns the manager for the given employee.
      *
-     * @param employee
-     * @return
+     * @param employee the person whose manager we want to talk to.
+     * @return the manager.
      */
     Employee findManager(final Employee employee) {
         Employee manager = null;
@@ -53,9 +53,11 @@ public class EmployeeDatabase {
      * @return int
      */
     public int countManagersAbove(final Employee employee) {
-        /*
-         * Implement this function
-         */
+        if (findManager(employee) == null) {
+            return 0;
+        }
+        return 1 + countManagersAbove(findManager(employee));
+
     }
 
     /**
@@ -67,9 +69,27 @@ public class EmployeeDatabase {
      * @return int
      */
     public int countEmployeesUnder(final Employee employee) {
-        /*
-         * Implement this function
-         */
+        int sum = 0;
+        // SCANNING EMPLOYEES
+        int managing = 0;
+        for (int count = 0; count < employees.size() - 1; count += 1) {
+            if (employees.get(count).getManager() == employee.getName()) {
+                managing += 1;
+            }
+        }
+        //BASE CASE
+        if (managing == 0) {
+            return 0;
+        } else {
+            for (int count = 0; count < employees.size() - 1; count += 1) {
+                if (employees.get(count).getManager() == employee.getName()) {
+                    sum += countEmployeesUnder(employees.get(count));
+                }
+            }
+            sum += managing;
+            return sum;
+        }
+
     }
 
     /**
